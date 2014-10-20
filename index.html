@@ -100,8 +100,10 @@ facebook js sdk
                 //alert('Device is ready! Make sure you set your app_id below this alert.');
                 FB.init({
                     appId: "509210995889450",
-                    nativeInterface: CDV.FB,
-                    useCachedDialogs: false
+                    xfbml: false,
+                    version: 'v2.1'
+                    //nativeInterface: CDV.FB,
+                    //  useCachedDialogs: false
                 });
 
             } catch (e) {
