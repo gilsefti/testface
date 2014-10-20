@@ -13,38 +13,21 @@
     <button onclick="facebookWallPost()">facebookWallPost</button>
     <button onclick="publishStoryFriend()">friendstory</button>
 
-    <div id="data">loading ...</div>
 
     <!--<script src="http://localhost:8080/target/target-script-min.js#anonymous"></script>-->
     <div id="fb-root"></div>
     <!-- cordova -->
-    <script src="cordova.js"></script>
+    <!--    <script src="cordova.js"></script>-->
     <!-- cordova facebook plugin -->
-    <script src="cdv-plugin-fb-connect.js"></script>
-    <!-- facebook js sdk -->
-    <script src="facebook-js-sdk.js"></script>
+    <!--
+ <script src="cdv-plugin-fb-connect.js"></script>
+facebook js sdk
+<script src="facebook-js-sdk.js"></script>
+-->
 
     <script>
         <!-- These are the notifications that are displayed to the user through pop-ups if the above JS files does not exist in the same directory-->
-        if ((typeof cordova == 'undefined') && (typeof Cordova == 'undefined')) alert('Cordova variable does not exist. Check that you have included cordova.js correctly');
-        if (typeof CDV == 'undefined') alert('CDV variable does not exist. Check that you have included cdv-plugin-fb-connect.js correctly');
-        if (typeof FB == 'undefined') alert('FB variable does not exist. Check that you have included the Facebook JS SDK file.');
 
-        FB.Event.subscribe('auth.login', function (response) {
-            alert('auth.login event');
-        });
-
-        FB.Event.subscribe('auth.logout', function (response) {
-            alert('auth.logout event');
-        });
-
-        FB.Event.subscribe('auth.sessionChange', function (response) {
-            alert('auth.sessionChange event');
-        });
-
-        FB.Event.subscribe('auth.statusChange', function (response) {
-            alert('auth.statusChange event');
-        });
 
         /*function getSession() {
                 alert("session: " + JSON.stringify(FB.getSession()));
@@ -63,9 +46,7 @@
         var fdata;
 
         function me() {
-            FB.api('/me/friends', {
-                fields: 'id, name, picture'
-            }, function (response) {
+            FB.api('/me', {}, function (response) {
                 if (response.error) {
                     alert(JSON.stringify(response.error));
                 } else {
@@ -100,7 +81,7 @@
         function login() {
             FB.login(
                 function (response) {
-                    if (response.session) {
+                    if (response.status === 'connected') {
                         alert('logged in');
                     } else {
                         alert('not logged in');
@@ -151,20 +132,38 @@
                 });
             }
         }
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '509210995889450',
+                xfbml: true,
+                version: 'v2.1'
+            });
+        };
 
-        document.addEventListener('deviceready', function () {
-            try {
-                alert('Device is ready! Make sure you set your app_id below this alert.');
-                FB.init({
-                    appId: "509210995889450",
-                    nativeInterface: CDV.FB,
-                    useCachedDialogs: false
-                });
-                document.getElementById('data').innerHTML = "";
-            } catch (e) {
-                alert(e);
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
             }
-        }, false);
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+         //     FB.init({ // appId: "509210995889450", // nativeInterface: CDV.FB, // useCachedDialogs: false // });
+         //        document.addEventListener('deviceready', function () {
+         //            try {
+         //                alert('Device is ready! Make sure you set your app_id below this alert.');
+         //                FB.init({
+         //                    appId: "509210995889450",
+         //                    nativeInterface: CDV.FB,
+         //                    useCachedDialogs: false
+         //                });
+         //                document.getElementById('data').innerHTML = "";
+         //            } catch (e) {
+         //                alert(e);
+         //            }
+         //        }, false);
     </script>
     <div id="log"></div>
 </body>
