@@ -74,8 +74,8 @@
                     appId: "509210995889450",
                     xfbml: false,
                     version: 'v2.1'
-                    nativeInterface: CDV.FB,
-                    useCachedDialogs: false
+//                    nativeInterface: CDV.FB,
+    //                    useCachedDialogs: false
                 });
 
             } catch (e) {
