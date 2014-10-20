@@ -1,53 +1,84 @@
-var app = {
-    // Application Constructor
-    initialize: function () {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function () {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function () {
-        //        startFace();
-    }
-};
+         <!-- These are the notifications that are displayed to the user through pop-ups if the above JS files does not exist in the same directory-->
 
-app.initialize();
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-function logon() {
-    alert("hello");
-    var success = function (response) {
-        if (response.status === 'connected') {
-            $state.go("LB");
+
+        /*function getSession() {
+                alert("session: " + JSON.stringify(FB.getSession()));
+            }
+            */
+        function getLoginStatus() {
+            FB.getLoginStatus(function (response) {
+                if (response.status == 'connected') {
+                    alert('logged in');
+                } else {
+                    alert('not logged in');
+                }
+            });
         }
-    }
-    var fail = function (response) {
-        alert("login failed")
-    }
+        var friendIDs = [];
+        var fdata;
 
-    facebookConnectPlugin.login([], success, fail);
-}
+        function me() {
+            FB.api('/me', {}, function (response) {
+                if (response.error) {
+                    alert(JSON.stringify(response.error));
+                } else {
+                    var data = document.getElementById('data');
+                    fdata = response.data;
+                    console.log("fdata: " + fdata);
+                    response.data.forEach(function (item) {
+                        var d = document.createElement('div');
+                        d.innerHTML = "<img src=" + item.picture + "/>" + item.name;
+                        data.appendChild(d);
+                    });
+                }
+                var friends = response.data;
+                console.log(friends.length);
+                for (var k = 0; k < friends.length && k < 200; k++) {
+                    var friend = friends[k];
+                    var index = 1;
+
+                    friendIDs[k] = friend.id;
+                    //friendsInfo[k] = friend;
+                }
+                console.log("friendId's: " + friendIDs);
+            });
+        }
+
+        function logout() {
+            FB.logout(function (response) {
+                alert('logged out');
+            });
+        }
+
+        function login() {
+            FB.login(
+                function (response) {
+                    if (response.status === 'connected') {
+                        alert('logged in');
+                    } else {
+                        alert('not logged in');
+                    }
+                }, {
+                    scope: ""
+                }
+            );
+        }
+
+
+
+
+        document.addEventListener('deviceready', function () {
+            try {
+                //alert('Device is ready! Make sure you set your app_id below this alert.');
+                FB.init({
+                    appId: "509210995889450",
+                    xfbml: false,
+                    version: 'v2.1'
+                    nativeInterface: CDV.FB,
+                    useCachedDialogs: false
+                });
+
+            } catch (e) {
+                alert(e);
+            }
+        }, false);
